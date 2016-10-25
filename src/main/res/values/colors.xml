@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="white">#FFFFFF</color>
+    <color name="dark">#222222</color>
+    
+    <color name="background_slider_fill">#F2F2F2</color>
+    <color name="background_slider_stroke">#FFFFFF</color>
+    <color name="background_slider_progress">#E8A058</color>
+    <color name="background_slider_thumb">#E8A058</color>
+    <color name="background_highlight">#44E8A058</color>
+    <color name="background_highlight_stroke">#E8A058</color>
+    
+    <color name="text_dialog">#444444</color>
+    
+</resources>
