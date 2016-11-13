@@ -81,6 +81,10 @@ public class FirebirdAndroidUtils {
 	private static boolean registeredMobileListener;
 	private static boolean registeredWifiListener;
 
+	public static boolean isDebug(Context context) {
+		return (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+	}
+
 	public static void manageErrors(Activity context, List<ErrorMessage> errorMessages) {
 
 		for (ErrorMessage errorMessage : errorMessages) {

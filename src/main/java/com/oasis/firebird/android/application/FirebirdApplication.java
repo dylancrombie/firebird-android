@@ -12,13 +12,9 @@ public abstract class FirebirdApplication extends Application {
 
 	protected DaoFactory daoFactory;
 	
-	private boolean debuggable;
-	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		debuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
 
 		if (getSQLiteHelper() != null) {
 
@@ -40,10 +36,6 @@ public abstract class FirebirdApplication extends Application {
 
 	}
 	
-	public boolean isDebuggable() {
-		return debuggable;
-	}
-
 	protected void onSetupApplication(SQLiteDatabase database) {
 
 	}
