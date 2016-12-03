@@ -820,26 +820,7 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
                     byte[] data = new byte[buffer.remaining()];
                     buffer.get(data);
 
-                    Matrix matrix = new Matrix();
-
-                    int orientation = lastOrientation;
-                    orientation -= FirebirdAndroidUtils.getDeviceDefaultOrientation(getContext());
-                    matrix.postRotate(orientation < 0 ? 270 : orientation);
-
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inMutable = true;
-                    options.inSampleSize = 2;
-                    Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-
-                    double imageRatio = (double) image.getHeight() / (double) image.getWidth();
-                    boolean portrait = image.getHeight() > image.getWidth();
-
-                    int width = portrait ? (int) (imageRatio * size) : size;
-                    int height = portrait ? size : (int) (imageRatio * size);
-
-                    Bitmap bitmap = Bitmap.createBitmap(Bitmap.createScaledBitmap(image, width, height, false), 0, 0, width, height, matrix, true);
-
-                    pictureListener.onImageTaken(bitmap);
+                    pictureListener.onImageTaken(getBitmap(data));
                     mImage.close();
 
                 }
@@ -848,5 +829,28 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
         }
 
     }
+
+	private Bitmap getBitmap(byte[] data) {
+
+		Matrix matrix = new Matrix();
+
+		int orientation = lastOrientation;
+		orientation -= FirebirdAndroidUtils.getDeviceDefaultOrientation(getContext());
+		matrix.postRotate(orientation < 0 ? 270 : orientation);
+
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
+		options.inSampleSize = 2;
+		Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+
+		double imageRatio = (double) image.getHeight() / (double) image.getWidth();
+		boolean portrait = image.getHeight() > image.getWidth();
+
+		int width = portrait ? (int) (imageRatio * size) : size;
+		int height = portrait ? size : (int) (imageRatio * size);
+
+		return Bitmap.createBitmap(Bitmap.createScaledBitmap(image, width, height, false), 0, 0, width, height, matrix, true);
+
+	}
 
 }

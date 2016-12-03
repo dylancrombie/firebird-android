@@ -10,11 +10,11 @@ import android.os.Bundle;
 
 public class FirebirdLocation {
 
-    Timer timer1;
-    LocationManager lm;
-    LocationResult locationResult;
-    boolean gps_enabled=false;
-    boolean network_enabled=false;
+    private Timer timer1;
+    private LocationManager lm;
+    private LocationResult locationResult;
+    private boolean gps_enabled = false;
+    private boolean network_enabled = false;
 
     public boolean getLocation(Context context, LocationResult result, Integer timeout)
     {
@@ -24,8 +24,8 @@ public class FirebirdLocation {
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         //exceptions will be thrown if provider is not permitted.
-        try{gps_enabled=lm.isProviderEnabled(LocationManager.GPS_PROVIDER);}catch(Exception ex){}
-        try{network_enabled=lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);}catch(Exception ex){}
+        try{gps_enabled=lm.isProviderEnabled(LocationManager.GPS_PROVIDER);}catch(Exception ex){ex.printStackTrace();}
+        try{network_enabled=lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);}catch(Exception ex){ex.printStackTrace();}
 
         //don't start listeners if no provider is enabled
         if(!gps_enabled && !network_enabled)
@@ -54,7 +54,7 @@ public class FirebirdLocation {
 
     }
 
-    LocationListener locationListenerGps = new LocationListener() {
+    private LocationListener locationListenerGps = new LocationListener() {
         public void onLocationChanged(Location location) {
             timer1.cancel();
             locationResult.gotLocation(location);
@@ -66,7 +66,7 @@ public class FirebirdLocation {
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     };
 
-    LocationListener locationListenerNetwork = new LocationListener() {
+    private LocationListener locationListenerNetwork = new LocationListener() {
         public void onLocationChanged(Location location) {
             timer1.cancel();
             locationResult.gotLocation(location);
