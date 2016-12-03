@@ -174,7 +174,9 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
 					if (afState == null) {
 						captureStillPicture();
 					} else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState ||
-							CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
+							CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState ||
+							CaptureResult.CONTROL_AF_STATE_PASSIVE_FOCUSED == afState ||
+							CaptureResult.CONTROL_AF_STATE_PASSIVE_UNFOCUSED == afState) {
 						// CONTROL_AE_STATE can be null on some devices
 						Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
 						if (aeState == null ||
@@ -271,7 +273,6 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
             e.printStackTrace();
 			return false;
 		} catch (InterruptedException e) {
-//			throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
             e.printStackTrace();
 			return false;
 		}

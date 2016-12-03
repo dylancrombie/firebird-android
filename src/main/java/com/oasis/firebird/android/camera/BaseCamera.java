@@ -279,6 +279,7 @@ public class BaseCamera extends SurfaceView implements SurfaceHolder.Callback, S
 	    try {
 	        camera = Camera.open();
 	    } catch (RuntimeException e) {
+			e.printStackTrace();
 	        return true;
 	    } finally {
 	        if (camera != null) camera.release();
