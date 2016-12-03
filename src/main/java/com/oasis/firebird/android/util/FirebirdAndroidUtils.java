@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -22,6 +23,7 @@ import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -51,6 +53,8 @@ import com.oasis.firebird.android.application.ResultListener.Result;
 import com.oasis.firebird.core.ErrorMessage;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -114,11 +118,15 @@ public class FirebirdAndroidUtils {
 
 		if(!context.isFinishing()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			AlertDialog.Builder builder;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+			} else {
+				builder = new AlertDialog.Builder(context);
+			}
 			builder.setCancelable(true);
 			builder.setTitle(errorMessage.getTag());
 			builder.setMessage(errorMessage.getMessage());
-			builder.setInverseBackgroundForced(true);
 			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 
@@ -151,11 +159,15 @@ public class FirebirdAndroidUtils {
 		View eulaLayout = inflater.inflate(R.layout.checkbox, null);
 		final CheckBox dontShowAgain = (CheckBox) eulaLayout.findViewById(R.id.chk_skip);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+		} else {
+			builder = new AlertDialog.Builder(context);
+		}
 		builder.setCancelable(true);
 		builder.setTitle(messageModel.getTitle());
 		builder.setMessage(messageModel.getMessage());
-		builder.setInverseBackgroundForced(true);
 		builder.setPositiveButton(messageModel.getPositive(), new DialogInterface.OnClickListener() {
 
 			@Override
@@ -1002,6 +1014,29 @@ public class FirebirdAndroidUtils {
 		} catch(Exception ex) {}
 
 		return gps_enabled || network_enabled;
+
+	}
+
+	public static String saveToInternalStorage(Context context, Bitmap bitmapImage, String folder, String filename, Bitmap.CompressFormat format, int quality) {
+
+		ContextWrapper cw = new ContextWrapper(context);
+		File directory = cw.getDir(folder, Context.MODE_PRIVATE);
+		File path = new File(directory,filename);
+
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(path);
+			bitmapImage.compress(format, quality, fos);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return path.getAbsolutePath();
 
 	}
 
