@@ -246,7 +246,12 @@ public class FirebirdAndroidUtils {
 	
 	public static void showOptionsList(final Activity context, final MessageModel messageModel, List<String> data, int icon, final ListResultListener resultListener) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+		} else {
+			builder = new AlertDialog.Builder(context);
+		}
 		builder.setIcon(icon);
 		builder.setTitle(messageModel.getTitle());
 		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, R.layout.dialog_list_item);
@@ -277,7 +282,12 @@ public class FirebirdAndroidUtils {
 
 	public static void showBitmap(final Activity context, final MessageModel messageModel, Bitmap data, final ResultListener resultListener) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+		} else {
+			builder = new AlertDialog.Builder(context);
+		}
 		builder.setTitle(messageModel.getTitle());
 
 		ImageView imageView = new ImageView(context);
@@ -321,73 +331,116 @@ public class FirebirdAndroidUtils {
 	
 	public static void getDate(Context context, final String title, final Calendar oldValue, final String message, final DateListener inputListener) {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-		builder.setTitle(message);
-
-		LinearLayout layout = new LinearLayout(context);
-		layout.setOrientation(LinearLayout.VERTICAL);
-
-		final DatePicker input = new DatePicker(context);
-		input.setCalendarViewShown(false);
-
-		if (oldValue != null) {
-
-			int year=oldValue.get(Calendar.YEAR);
-			int month=oldValue.get(Calendar.MONTH);
-			int day=oldValue.get(Calendar.DAY_OF_MONTH);
-
-			input.updateDate(year, month, day);
-
-		}
-
-		layout.addView(input);
-
-		builder.setView(layout);
-
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface dialog, int whichButton) {
+		DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
 				Calendar calendar = new GregorianCalendar();
-				calendar.set(Calendar.YEAR, input.getYear());
-				calendar.set(Calendar.MONTH, input.getMonth());
-				calendar.set(Calendar.DAY_OF_MONTH, input.getDayOfMonth());
+				calendar.set(Calendar.YEAR, year);
+				calendar.set(Calendar.MONTH, monthOfYear);
+				calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 				inputListener.onInput(calendar);
 
 			}
 
-		});
+		};
 
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface dialog, int whichButton) {
-
-				inputListener.onCancel();
-
-			}
-
-		});
-		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
+		DatePickerDialog datePicker;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			datePicker = new DatePickerDialog(context, android.R.style.Theme_Material_Light_Dialog, dateListener, oldValue.get(Calendar.YEAR), oldValue.get(Calendar.MONTH), oldValue.get(Calendar.DAY_OF_MONTH));
+		} else {
+			datePicker = new DatePickerDialog(context, dateListener, oldValue.get(Calendar.YEAR), oldValue.get(Calendar.MONTH), oldValue.get(Calendar.DAY_OF_MONTH));
+		}
+		datePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
-			public void onCancel(DialogInterface arg0) {
-
+			public void onCancel(DialogInterface dialog) {
 				inputListener.onCancel();
-
 			}
 		});
+		datePicker.show();
 
-		AlertDialog alert = builder.create();
-
-		alert.show();
+//		AlertDialog.Builder builder;
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//			builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+//		} else {
+//			builder = new AlertDialog.Builder(context);
+//		}
+//
+//		builder.setTitle(message);
+//
+//		LinearLayout layout = new LinearLayout(context);
+//		layout.setOrientation(LinearLayout.VERTICAL);
+//
+//		final DatePicker input;
+//
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//			input = new DatePicker(context);
+//		} else {
+//			input = = new DatePicker(context);
+//		}
+//		input.setCalendarViewShown(false);
+//
+//		if (oldValue != null) {
+//
+//			int year=oldValue.get(Calendar.YEAR);
+//			int month=oldValue.get(Calendar.MONTH);
+//			int day=oldValue.get(Calendar.DAY_OF_MONTH);
+//
+//			input.updateDate(year, month, day);
+//
+//		}
+//
+//		layout.addView(input);
+//
+//		builder.setView(layout);
+//
+//		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//
+//			public void onClick(DialogInterface dialog, int whichButton) {
+//
+//				Calendar calendar = new GregorianCalendar();
+//				calendar.set(Calendar.YEAR, input.getYear());
+//				calendar.set(Calendar.MONTH, input.getMonth());
+//				calendar.set(Calendar.DAY_OF_MONTH, input.getDayOfMonth());
+//				inputListener.onInput(calendar);
+//
+//			}
+//
+//		});
+//
+//		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//
+//			public void onClick(DialogInterface dialog, int whichButton) {
+//
+//				inputListener.onCancel();
+//
+//			}
+//
+//		});
+//		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//
+//			@Override
+//			public void onCancel(DialogInterface arg0) {
+//
+//				inputListener.onCancel();
+//
+//			}
+//		});
+//
+//		AlertDialog alert = builder.create();
+//
+//		alert.show();
 		
 	}
 	
 	public static void getInput(Activity context, final String title, final String oldValue, final String message, final String hint, final Integer inputType, final int characterLimit, final InputListener inputListener) {
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
+		AlertDialog.Builder builder;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
+		} else {
+			builder = new AlertDialog.Builder(context);
+		}
 		builder.setTitle(title);
 		
 		LayoutInflater inflater = context.getLayoutInflater();
