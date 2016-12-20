@@ -1,5 +1,6 @@
 package com.oasis.firebird.android.util;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -25,6 +27,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -35,8 +39,10 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -1091,6 +1097,26 @@ public class FirebirdAndroidUtils {
 		}
 		return path.getAbsolutePath();
 
+	}
+
+	public static void setTranslucentStatusBar(Window window) {
+		if (window == null) return;
+		int sdkInt = Build.VERSION.SDK_INT;
+		if (sdkInt >= Build.VERSION_CODES.LOLLIPOP) {
+			setTranslucentStatusBarLollipop(window);
+		} else if (sdkInt >= Build.VERSION_CODES.KITKAT) {
+			setTranslucentStatusBarKiKat(window);
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	private static void setTranslucentStatusBarLollipop(Window window) {
+		window.setStatusBarColor(ContextCompat.getColor(window.getContext(), android.R.color.transparent));
+	}
+
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private static void setTranslucentStatusBarKiKat(Window window) {
+		window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 	}
 
 }
