@@ -4,12 +4,12 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 public class StackTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.75F;
 
     public StackTransformer() {
     }
 
-    protected void onTransform(View view, float position) {
+    private void onTransform(View view, float position) {
+
         if(position <= 0.0F) {
             view.setTranslationX(0.0F);
             view.setScaleX(1.0F);
@@ -28,21 +28,7 @@ public class StackTransformer implements ViewPager.PageTransformer {
     }
 
     public void transformPage(View view, float position) {
-        this.onPreTransform(view, position);
         this.onTransform(view, position);
-        this.onPostTransform(view, position);
     }
-
-    protected boolean hideOffscreenPages() {
-        return false;
-    }
-
-    protected boolean isPagingEnabled() {
-        return true;
-    }
-
-    protected void onPreTransform(View view, float position) {}
-
-    protected void onPostTransform(View view, float position) {}
 
 }

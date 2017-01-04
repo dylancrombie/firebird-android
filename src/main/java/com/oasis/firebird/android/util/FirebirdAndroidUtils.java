@@ -18,6 +18,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
@@ -36,6 +37,7 @@ import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
@@ -934,6 +936,20 @@ public class FirebirdAndroidUtils {
 		canvas.drawBitmap(bitmap, 0, 0, null);
 		return whiteBgBitmap;
 
+	}
+
+	public static float getScreenWidth(Activity activity) {
+		Display display = activity.getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		return size.x;
+	}
+
+	public static float getScreenHeight(Activity activity) {
+		Display display = activity.getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		return size.y;
 	}
 
 	public interface NetworkListener {
