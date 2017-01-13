@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
@@ -34,8 +35,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -43,6 +46,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -952,6 +956,21 @@ public class FirebirdAndroidUtils {
 		return size.y;
 	}
 
+	public static boolean isValidEmail(String email) {
+		return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+	}
+
+	public static void hideKeyboard(Activity activity) {
+
+		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		View view = activity.getCurrentFocus();
+		if (view == null) {
+			view = new View(activity);
+		}
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+	}
+
 	public interface NetworkListener {
 
 		void onConnected(Boolean connected, int networkType, boolean wifi);
@@ -1133,6 +1152,23 @@ public class FirebirdAndroidUtils {
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	private static void setTranslucentStatusBarKiKat(Window window) {
 		window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+	}
+
+	public static Bitmap getBitmapFromView(View view) {
+
+		Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(returnedBitmap);
+		Drawable bgDrawable =view.getBackground();
+
+		if (bgDrawable!=null) {
+			bgDrawable.draw(canvas);
+		} else {
+			canvas.drawColor(Color.WHITE);
+		}
+
+		view.draw(canvas);
+		return returnedBitmap;
+
 	}
 
 }
