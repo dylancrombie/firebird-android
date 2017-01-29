@@ -7,5 +7,6 @@
     <dimen name="text_large">36sp</dimen>
     <dimen name="dialog_list_item">18sp</dimen>
     <dimen name="rounded">7dp</dimen>
+    <dimen name="stack_translation">15dp</dimen>
 
 </resources>
