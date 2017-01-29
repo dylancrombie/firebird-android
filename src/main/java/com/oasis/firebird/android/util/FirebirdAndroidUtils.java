@@ -12,13 +12,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -29,8 +29,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -48,12 +46,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -370,79 +366,41 @@ public class FirebirdAndroidUtils {
 			}
 		});
 		datePicker.show();
-
-//		AlertDialog.Builder builder;
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//			builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert);
-//		} else {
-//			builder = new AlertDialog.Builder(context);
-//		}
-//
-//		builder.setTitle(message);
-//
-//		LinearLayout layout = new LinearLayout(context);
-//		layout.setOrientation(LinearLayout.VERTICAL);
-//
-//		final DatePicker input;
-//
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//			input = new DatePicker(context);
-//		} else {
-//			input = = new DatePicker(context);
-//		}
-//		input.setCalendarViewShown(false);
-//
-//		if (oldValue != null) {
-//
-//			int year=oldValue.get(Calendar.YEAR);
-//			int month=oldValue.get(Calendar.MONTH);
-//			int day=oldValue.get(Calendar.DAY_OF_MONTH);
-//
-//			input.updateDate(year, month, day);
-//
-//		}
-//
-//		layout.addView(input);
-//
-//		builder.setView(layout);
-//
-//		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//
-//			public void onClick(DialogInterface dialog, int whichButton) {
-//
-//				Calendar calendar = new GregorianCalendar();
-//				calendar.set(Calendar.YEAR, input.getYear());
-//				calendar.set(Calendar.MONTH, input.getMonth());
-//				calendar.set(Calendar.DAY_OF_MONTH, input.getDayOfMonth());
-//				inputListener.onInput(calendar);
-//
-//			}
-//
-//		});
-//
-//		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//
-//			public void onClick(DialogInterface dialog, int whichButton) {
-//
-//				inputListener.onCancel();
-//
-//			}
-//
-//		});
-//		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//
-//			@Override
-//			public void onCancel(DialogInterface arg0) {
-//
-//				inputListener.onCancel();
-//
-//			}
-//		});
-//
-//		AlertDialog alert = builder.create();
-//
-//		alert.show();
 		
+	}
+
+	public static void getDate(Context context, final String title, final Calendar oldValue, final Long minDate, final Long maxDate, final DateListener inputListener) {
+
+		DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+				Calendar calendar = new GregorianCalendar();
+				calendar.set(Calendar.YEAR, year);
+				calendar.set(Calendar.MONTH, monthOfYear);
+				calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+				inputListener.onInput(calendar);
+
+			}
+
+		};
+
+		DatePickerDialog datePicker;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			datePicker = new DatePickerDialog(context, android.R.style.Theme_Material_Light_Dialog, dateListener, oldValue.get(Calendar.YEAR), oldValue.get(Calendar.MONTH), oldValue.get(Calendar.DAY_OF_MONTH));
+		} else {
+			datePicker = new DatePickerDialog(context, dateListener, oldValue.get(Calendar.YEAR), oldValue.get(Calendar.MONTH), oldValue.get(Calendar.DAY_OF_MONTH));
+		}
+		if (minDate != null) datePicker.getDatePicker().setMinDate(minDate);
+		if (maxDate != null) datePicker.getDatePicker().setMinDate(maxDate);
+		datePicker.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				inputListener.onCancel();
+			}
+		});
+		datePicker.show();
+
 	}
 	
 	public static void getInput(Activity context, final String title, final String oldValue, final String message, final String hint, final Integer inputType, final int characterLimit, final InputListener inputListener) {
@@ -1074,23 +1032,22 @@ public class FirebirdAndroidUtils {
 
 	public static int getActionBarSize(Activity activity) {
 
-		TypedValue typedValue = new TypedValue();
-		int[] textSizeAttr = new int[]{R.attr.actionBarSize};
-		int indexOfAttrTextSize = 0;
-		TypedArray a = activity.obtainStyledAttributes(typedValue.data, textSizeAttr);
-		int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
-		a.recycle();
-		return actionBarSize;
+		TypedValue tv = new TypedValue();
+		if (activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+			return TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources().getDisplayMetrics());
+		}
+
+		return 0;
 
 	}
 
 	public static int getStatusBarHeight(Activity activity) {
-		int result = 0;
-		int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resourceId > 0) {
-			result = activity.getResources().getDimensionPixelSize(resourceId);
-		}
-		return result;
+
+		Rect rectangle = new Rect();
+		Window window = activity.getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+		return rectangle.top;
+
 	}
 
 	public static boolean isLocationEnabled(Context context) {
