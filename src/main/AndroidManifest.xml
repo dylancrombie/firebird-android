@@ -4,5 +4,5 @@
 
     <uses-sdk
         android:maxSdkVersion="23" />
-    
+
 </manifest>

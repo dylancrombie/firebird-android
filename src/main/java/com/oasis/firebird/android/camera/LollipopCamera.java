@@ -302,9 +302,9 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
 				}
 
 				// For still image captures, we use the largest available size.
-//				Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizesByArea());
+				Size largest = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new CompareSizesByArea());
                 Size optimal = getOptimalPreviewSize(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), width, height);
-				mImageReader = ImageReader.newInstance(optimal.getWidth(), optimal.getHeight(), ImageFormat.JPEG, /*maxImages*/2);
+				mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(), ImageFormat.JPEG, /*maxImages*/2);
 				mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler);
 
 				// Find out if we need to swap dimension to get the preview size relative to sensor
@@ -799,7 +799,7 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
 
     private void destroy() {
         sensorManager.unregisterListener(this);
-    }
+	}
 
     private class ImageSaver implements Runnable {
 

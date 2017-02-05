@@ -9,8 +9,8 @@
     <string name="title_enable_mobile_data">Mobile Data is not enabled</string>
     <string name="title_confirm">Confirmation</string>
     <string name="title_camera_unavailable">Camera Not Available</string>
-    <string name="title_connection">Connection</string>
-    <string name="title_no_connection">Internet Connection</string>
+    <string name="title_connection">No Internet Connection</string>
+    <string name="title_no_connection">No Internet Connection</string>
     <string name="title_enable_gps">GPS is not enabled</string>
 
     <!-- Buttons -->
@@ -43,7 +43,7 @@
 	<string name="message_overlaps">Selection cannot overlap another highlight</string>
 	<string name="message_edit_highlight">Edit highlight</string>
 	<string name="message_camera_unavailable">Camera is currently not available. Try close any other apps that may be using it and retry.</string>
-    <string name="message_connection">There was a problem communicating with the server.</string>
+    <string name="message_connection">You must be connected to the internet.</string>
     <string name="message_no_connection">You must be connected to the internet to perform this operation.</string>
     <string name="message_enable_gps">You must have GPS enabled before you may continue. Would you like to go to the settings on the device to enable the GPS?</string>
 	
