@@ -792,8 +792,13 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
 
     public void release() {
 
-        closeCamera();
-        stopBackgroundThread();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				closeCamera();
+				stopBackgroundThread();
+			}
+		}).start();
 
     }
 
