@@ -853,7 +853,8 @@ public class LollipopCamera extends TextureView implements SensorEventListener, 
 		boolean portrait = image.getHeight() > image.getWidth();
 
 		if (Build.DEVICE.equalsIgnoreCase("HWEVA") ||
-				Build.DEVICE.equalsIgnoreCase("HWVIE")) {
+				Build.DEVICE.equalsIgnoreCase("HWVIE") ||
+				Build.DEVICE.equalsIgnoreCase("HWVNS-H")) {
 			portrait = !portrait;
 		}
 
