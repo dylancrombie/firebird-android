@@ -252,7 +252,7 @@ public class FirebirdAndroidUtils {
 
 	}
 	
-	public static void showOptionsList(final Activity context, final MessageModel messageModel, List<String> data, int icon, final ListResultListener resultListener) {
+	public static void showOptionsList(final Activity context, final MessageModel messageModel, List<String> data, Integer icon, final ListResultListener resultListener) {
 
 		AlertDialog.Builder builder;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -260,7 +260,9 @@ public class FirebirdAndroidUtils {
 		} else {
 			builder = new AlertDialog.Builder(context);
 		}
-		builder.setIcon(icon);
+		if (icon != null) {
+			builder.setIcon(icon);
+		}
 		builder.setTitle(messageModel.getTitle());
 		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, R.layout.dialog_list_item);
 		arrayAdapter.addAll(data);

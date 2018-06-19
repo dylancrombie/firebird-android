@@ -3,6 +3,6 @@
     package="com.oasis.firebird.android" >
 
     <uses-sdk
-        android:maxSdkVersion="23" />
+        android:maxSdkVersion="27" />
 
 </manifest>
