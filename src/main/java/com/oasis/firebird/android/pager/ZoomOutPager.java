@@ -1,10 +1,7 @@
 package com.oasis.firebird.android.pager;
 
-import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
-
-import com.oasis.firebird.android.R;
 
 public class ZoomOutPager implements ViewPager.PageTransformer {
     private static final float MIN_SCALE = 0.98f;
